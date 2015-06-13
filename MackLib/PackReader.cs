@@ -89,6 +89,8 @@ namespace MackLib
 		/// <returns></returns>
 		public bool Exists(string fullName)
 		{
+			fullName = fullName.ToLower();
+
 			lock (entries)
 				return entries.ContainsKey(fullName);
 		}
@@ -101,6 +103,8 @@ namespace MackLib
 		/// <returns></returns>
 		public PackListEntry GetEntry(string fullName)
 		{
+			fullName = fullName.ToLower();
+
 			PackListEntry result;
 
 			lock (entriesNamed)
@@ -117,6 +121,8 @@ namespace MackLib
 		/// <returns></returns>
 		public List<PackListEntry> GetEntriesByFileName(string fileName)
 		{
+			fileName = fileName.ToLower();
+
 			List<PackListEntry> result;
 
 			lock (entriesNamed)
@@ -211,13 +217,15 @@ namespace MackLib
 				entry.FileTime5 = DateTime.FromFileTimeUtc(br.ReadInt64());
 
 				lock (entries)
-					entries[entry.FullName] = entry;
+					entries[entry.FullName.ToLower()] = entry;
 
 				lock (entriesNamed)
 				{
-					if (!entriesNamed.ContainsKey(entry.FileName))
-						entriesNamed[entry.FileName] = new List<PackListEntry>();
-					entriesNamed[entry.FileName].Add(entry);
+					var key = entry.FileName.ToLower();
+
+					if (!entriesNamed.ContainsKey(key))
+						entriesNamed[key] = new List<PackListEntry>();
+					entriesNamed[key].Add(entry);
 				}
 			}
 		}
