@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ComponentAce.Compression.Libs.zlib;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using zlib;
 
 namespace MackLib
 {
