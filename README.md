@@ -1,4 +1,4 @@
 MackLib
 ==============================
 
-.NET library to read Mabinogi pack files.
+.NET library for reading Mabinogi pack files.
