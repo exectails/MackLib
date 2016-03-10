@@ -153,7 +153,7 @@ namespace MackLib
 			int len;
 			byte[] strBuffer;
 
-			var fs = new FileStream(filePath, FileMode.Open);
+			var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 			var br = new BinaryReader(fs, Encoding.ASCII);
 
 			fileStreams.Add(fs);
