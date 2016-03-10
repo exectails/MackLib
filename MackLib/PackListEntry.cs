@@ -125,7 +125,7 @@ namespace MackLib
 			byte[] buffer;
 			lock (br)
 			{
-				br.BaseStream.Seek((int)start + (int)this.DataOffset, SeekOrigin.Begin);
+				br.BaseStream.Seek(start + this.DataOffset, SeekOrigin.Begin);
 				buffer = br.ReadBytes((int)this.CompressedSize);
 			}
 
