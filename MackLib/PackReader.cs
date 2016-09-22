@@ -53,7 +53,7 @@ namespace MackLib
 					this.Load(path);
 			}
 			else
-				throw new ArgumentException("Expected pack file or folder containing pack files as filePath.");
+				throw new ArgumentException("Path not found.");
 		}
 
 		/// <summary>
