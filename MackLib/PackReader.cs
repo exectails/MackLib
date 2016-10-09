@@ -232,12 +232,18 @@ namespace MackLib
 
 		/// <summary>
 		/// Attempts to return the path to the installed instance of Mabinogi.
+		/// Returns null if no Mabinogi folder could be found.
 		/// </summary>
 		/// <returns></returns>
 		public static string GetMabinogiDirectory()
 		{
 			// TODO: More thorough search.
-			return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Nexon\Mabinogi", "", "").ToString();
+
+			var regValue = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Nexon\Mabinogi", "", "");
+			if (regValue != null)
+				return regValue.ToString();
+
+			return null;
 		}
 	}
 }
