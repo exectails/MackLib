@@ -114,7 +114,7 @@ namespace MackLib
 		}
 
 		/// <summary>
-		/// Writes decompressed data into given string.
+		/// Writes decompressed data into given stream.
 		/// </summary>
 		/// <param name="stream"></param>
 		public void WriteData(Stream stream)
