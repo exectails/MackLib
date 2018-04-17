@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MackLib.UclCompression;
 
 namespace MackLib
 {
@@ -148,6 +149,9 @@ namespace MackLib
 		/// <param name="seed"></param>
 		private void Decode(ref byte[] buffer)
 		{
+			if (header.D1 == 1)
+				return;
+
 			var mt = new MTRandom((uint)((this.Seed << 7) ^ 0xA9C36DE1));
 
 			for (int i = 0; i < buffer.Length; ++i)
@@ -161,8 +165,18 @@ namespace MackLib
 		/// <param name="outStream"></param>
 		private void Decompress(byte[] buffer, Stream outStream)
 		{
-			using (var zlib = new ZOutputStream(outStream))
-				zlib.Write(buffer, 0, buffer.Length);
+			if (header.D1 > 1)
+			{
+				using (var zlib = new ZOutputStream(outStream))
+					zlib.Write(buffer, 0, buffer.Length);
+			}
+			else
+			{
+				var uncompressed = Ucl.Decompress_NRV2E(buffer, this.DecompressedSize);
+
+				using (var ms = new MemoryStream(uncompressed))
+					ms.CopyTo(outStream);
+			}
 		}
 	}
 }
