@@ -129,8 +129,16 @@ namespace MackLib
 				buffer = br.ReadBytes((int)this.CompressedSize);
 			}
 
-			this.Decode(ref buffer);
-			this.Decompress(buffer, stream);
+			if (this.IsCompressed)
+			{
+				this.Decode(ref buffer);
+				this.Decompress(buffer, stream);
+			}
+			else
+			{
+				using (var ms = new MemoryStream(buffer))
+					ms.CopyTo(stream);
+			}
 		}
 
 		/// <summary>
