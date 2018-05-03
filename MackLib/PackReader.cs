@@ -239,9 +239,13 @@ namespace MackLib
 		{
 			// TODO: More thorough search.
 
-			var regValue = Registry.GetValue(@"HKEY_CURRENT_USER\Software\Nexon\Mabinogi", "", "");
-			if (regValue != null)
-				return regValue.ToString();
+			var key = Registry.CurrentUser.OpenSubKey(@"Software\Nexon\Mabinogi", false);
+			var value = key.GetValue("");
+			if (value != null)
+				return (string)value;
+
+			if (Directory.Exists(@"C:\Nexon\Library\mabinogi\appdata"))
+				return @"C:\Nexon\Library\mabinogi\appdata";
 
 			return null;
 		}

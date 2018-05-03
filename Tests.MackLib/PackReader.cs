@@ -107,9 +107,9 @@ namespace Tests.MackLib
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
 			using (var pr = new PackReader(path))
 			{
-				var entries = pr.GetEntriesByFileName("aidescdata_human.xml");
+				var entries = pr.GetEntriesByFileName("money.raw");
 				Assert.True(entries.Count > 0);
-				Assert.Single(entries, a => a.FullName == @"db\ai\local\aidescdata_human.xml");
+				Assert.Single(entries, a => a.FullName == @"color\money.raw");
 			}
 		}
 	}
