@@ -133,14 +133,14 @@ namespace MackLib
 		{
 			if (outPath == null)
 			{
-				if (_tempPath == null || File.Exists(_tempPath))
+				if (_tempPath == null)
 					_tempPath = Path.GetTempFileName() + Path.GetExtension(this.FileName);
 
 				outPath = _tempPath;
 			}
 
-			using (var fsOut = new FileStream(outPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-				this.WriteData(fsOut);
+			using (var fs = new FileStream(outPath, FileMode.Create, FileAccess.Write, FileShare.None))
+				this.WriteData(fs);
 
 			return outPath;
 		}
@@ -170,7 +170,7 @@ namespace MackLib
 		/// <summary>
 		/// Extracts the file to the temp folder and returns a file stream for it.
 		/// </summary>
-		/// <returns>Stream with the data, has to be closed by the user.</returns>
+		/// <returns>Stream with the data, has to be closed by the caller.</returns>
 		public FileStream GetDataAsFileStream()
 		{
 			return new FileStream(this.ExtractFile(), FileMode.Open, FileAccess.Read, FileShare.Read);
