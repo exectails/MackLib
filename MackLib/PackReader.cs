@@ -163,7 +163,7 @@ namespace MackLib
 			for (var i = 0; i < header.FileCount2; ++i)
 			{
 				var entry = PackListEntry.ReadFrom(header, br);
-				var fullPath = (header.BasePath + entry.RelativePath).ToLower();
+				var fullPath = entry.FullName.ToLower();
 
 				lock (_syncLock)
 				{

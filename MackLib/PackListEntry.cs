@@ -52,6 +52,14 @@ namespace MackLib
 		public string FileName { get; set; }
 
 		/// <summary>
+		/// Returns the full path to the file, incl. base path.
+		/// </summary>
+		/// <remarks>
+		/// Not part of the struct.
+		/// </remarks>
+		public string FullName => (this.Header.BasePath + this.RelativePath);
+
+		/// <summary>
 		/// Returns header of the pack file this entry belongs to.
 		/// </summary>
 		public PackHeader Header { get; private set; }
