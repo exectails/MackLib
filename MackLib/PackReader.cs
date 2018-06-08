@@ -93,16 +93,16 @@ namespace MackLib
 		/// Returns the entry with the given full name, or null if it
 		/// doesn't exist.
 		/// </summary>
-		/// <param name="fullName"></param>
+		/// <param name="filePath"></param>
 		/// <returns></returns>
-		public PackListEntry GetEntry(string fullName)
+		public PackListEntry GetEntry(string filePath)
 		{
-			fullName = fullName.ToLower();
+			filePath = filePath.ToLower();
 
 			PackListEntry result;
 
 			lock (_entriesNamed)
-				_entries.TryGetValue(fullName, out result);
+				_entries.TryGetValue(filePath, out result);
 
 			return result;
 		}
@@ -155,9 +155,10 @@ namespace MackLib
 			for (var i = 0; i < header.FileCount2; ++i)
 			{
 				var entry = PackListEntry.ReadFrom(header, br);
+				var fullPath = (header.BasePath + entry.RelativePath);
 
 				lock (_entries)
-					_entries[entry.FullName.ToLower()] = entry;
+					_entries[fullPath.ToLower()] = entry;
 
 				lock (_entriesNamed)
 				{

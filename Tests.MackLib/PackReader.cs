@@ -43,7 +43,7 @@ namespace Tests.MackLib
 			using (var pr = new PackReader(path))
 			{
 				Console.WriteLine(path);
-				var itemdb = pr.GetEntry(@"db\itemdb.xml");
+				var itemdb = pr.GetEntry(@"data\db\itemdb.xml");
 				Assert.NotEqual(null, itemdb);
 
 				var data = itemdb.GetData();
@@ -57,7 +57,7 @@ namespace Tests.MackLib
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
 			using (var pr = new PackReader(path))
 			{
-				var itemdb = pr.GetEntry(@"db\itemdb.xml");
+				var itemdb = pr.GetEntry(@"data\db\itemdb.xml");
 				Assert.NotEqual(null, itemdb);
 
 				using (var sr = new StreamReader(itemdb.GetDataAsStream()))
@@ -75,7 +75,7 @@ namespace Tests.MackLib
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
 			using (var pr = new PackReader(path))
 			{
-				var itemdb = pr.GetEntry(@"db\keyword.xml");
+				var itemdb = pr.GetEntry(@"data\db\keyword.xml");
 				Assert.NotEqual(null, itemdb);
 
 				using (var sr = new StreamReader(itemdb.GetDataAsFileStream()))
@@ -93,7 +93,27 @@ namespace Tests.MackLib
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
 			using (var pr = new PackReader(path))
 			{
-				var entry = pr.GetEntry(@"db\race.xml");
+				var entry = pr.GetEntry(@"data\db\race.xml");
+				Assert.NotEqual(null, entry);
+			}
+		}
+
+		[Fact]
+		public void FullPath()
+		{
+			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
+			using (var pr = new PackReader(path))
+			{
+				// Previously the base path was ignored, which meant that
+				// entries from language.pack were put into the root folder,
+				// and would've been found there. This messes up the folder
+				// structure, and this file should actually not be found
+				// in this location.
+
+				var entry = pr.GetEntry(@"local\world.english.txt");
+				Assert.Equal(null, entry);
+
+				entry = pr.GetEntry(@"data\local\world.english.txt");
 				Assert.NotEqual(null, entry);
 			}
 		}
@@ -106,7 +126,7 @@ namespace Tests.MackLib
 			{
 				var entries = pr.GetEntriesByFileName("money.raw");
 				Assert.True(entries.Count > 0);
-				Assert.Single(entries, a => a.FullName == @"color\money.raw");
+				Assert.Single(entries, a => a.RelativePath == @"color\money.raw");
 			}
 		}
 	}

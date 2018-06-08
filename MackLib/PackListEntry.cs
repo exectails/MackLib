@@ -15,7 +15,7 @@ namespace MackLib
 		private string _tempPath;
 
 		public PackListNameType NameType { get; set; }
-		public string FullName { get; set; }
+		public string RelativePath { get; set; }
 		public uint Seed { get; set; }
 		public uint Zero { get; set; }
 		public uint DataOffset { get; internal set; }
@@ -105,8 +105,7 @@ namespace MackLib
 				throw new Exception("Unknown entry name type '" + entry.NameType + "'.");
 
 			len = Array.IndexOf(strBuffer, (byte)0);
-			entry.FullName = Encoding.UTF8.GetString(strBuffer, 0, len);
-			entry.FileName = Path.GetFileName(entry.FullName);
+			entry.RelativePath = Encoding.UTF8.GetString(strBuffer, 0, len);
 
 			entry.Seed = br.ReadUInt32();
 			entry.Zero = br.ReadUInt32();
@@ -119,6 +118,8 @@ namespace MackLib
 			entry.FileTime3 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			entry.FileTime4 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			entry.FileTime5 = DateTime.FromFileTimeUtc(br.ReadInt64());
+
+			entry.FileName = Path.GetFileName(entry.RelativePath);
 
 			return entry;
 		}
