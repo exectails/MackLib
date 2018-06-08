@@ -2,8 +2,17 @@
 
 namespace MackLib.UclCompression
 {
+	/// <summary>
+	/// Compression for KR beta client.
+	/// </summary>
 	public static class Ucl
 	{
+		/// <summary>
+		/// Decompresses array to given size and returns it.
+		/// </summary>
+		/// <param name="src"></param>
+		/// <param name="uncompressedSize"></param>
+		/// <returns></returns>
 		public static byte[] Decompress_NRV2E(byte[] src, uint uncompressedSize)
 		{
 			var dstLength = uncompressedSize;
@@ -16,7 +25,15 @@ namespace MackLib.UclCompression
 			return dst;
 		}
 
-		public static UclResult Decompress_NRV2E(byte[] src, uint src_len, byte[] dst, ref uint dst_len)
+		/// <summary>
+		/// Decompresses array.
+		/// </summary>
+		/// <param name="src"></param>
+		/// <param name="src_len"></param>
+		/// <param name="dst"></param>
+		/// <param name="dst_len"></param>
+		/// <returns></returns>
+		private static UclResult Decompress_NRV2E(byte[] src, uint src_len, byte[] dst, ref uint dst_len)
 		{
 			uint bb = 0;
 			uint ilen = 0, olen = 0, last_m_off = 1;

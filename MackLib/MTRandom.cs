@@ -1,25 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MackLib
+﻿namespace MackLib
 {
-	// Implementation by Yiting
+	/// <summary>
+	/// MersenneTwister Random Number Generator.
+	/// </summary>
+	/// <remarks>
+	/// Implementation by Yiting.
+	/// </remarks>
 	public class MTRandom
 	{
 		private const int N = 624;
 		private const int M = 397;
 		private const uint MATRIX_A = 0x9908B0DF;
 
-		private uint[] _mt;
+		private readonly uint[] _mt;
 		private int _mti;
 
-		public MTRandom(int seed = 5498)
-			: this((uint)seed)
-		{ }
+		/// <summary>
+		/// Creates new instance.
+		/// </summary>
+		/// <param name="seed"></param>
+		public MTRandom(int seed = 5498) : this((uint)seed)
+		{
+		}
 
+		/// <summary>
+		/// Creates new instance.
+		/// </summary>
+		/// <param name="seed"></param>
 		public MTRandom(uint seed = 5498)
 		{
 			_mti = N;

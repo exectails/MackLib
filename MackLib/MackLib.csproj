@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MTRandom.cs" />
-    <Compile Include="PackageListEntryType.cs" />
+    <Compile Include="PackListNameType.cs" />
     <Compile Include="PackListEntry.cs" />
     <Compile Include="PackHeader.cs" />
     <Compile Include="PackReader.cs" />

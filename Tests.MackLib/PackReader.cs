@@ -1,10 +1,6 @@
 ﻿using MackLib;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Tests.MackLib
@@ -46,6 +42,7 @@ namespace Tests.MackLib
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
 			using (var pr = new PackReader(path))
 			{
+				Console.WriteLine(path);
 				var itemdb = pr.GetEntry(@"db\itemdb.xml");
 				Assert.NotEqual(null, itemdb);
 
