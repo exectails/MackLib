@@ -7,6 +7,9 @@ using System.Text;
 
 namespace MackLib
 {
+	/// <summary>
+	/// Package folder and pack file reader.
+	/// </summary>
 	public class PackReader : IDisposable
 	{
 		private readonly object _syncLock = new object();

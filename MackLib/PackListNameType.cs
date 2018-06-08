@@ -1,5 +1,8 @@
 ﻿namespace MackLib
 {
+	/// <summary>
+	/// Specifies how a pack list name is read and written.
+	/// </summary>
 	public enum PackListNameType : byte
 	{
 		L16 = 0,
