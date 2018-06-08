@@ -14,17 +14,17 @@ namespace MackLib
 		// 512 B
 		public byte[/*4*/] Signature { get; internal set; }
 		public int Version { get; set; }
-		public uint ClientVersion { get; set; }
-		public uint FileCount1 { get; internal set; }
+		public int ClientVersion { get; set; }
+		public int FileCount1 { get; internal set; }
 		public DateTime FileTime1 { get; set; }
 		public DateTime FileTime2 { get; set; }
 		public string/*char[480]*/ BasePath { get; set; }
 
 		// 32 B
-		public uint FileCount2 { get; internal set; }
-		public uint ListLength { get; internal set; } // includes blank
-		public uint BlankLength { get; set; }
-		public uint DataLength { get; set; }
+		public int FileCount2 { get; internal set; }
+		public int ListLength { get; internal set; } // includes blank
+		public int BlankLength { get; set; }
+		public int DataLength { get; set; }
 		public byte[/*16*/] Zero { get; set; }
 
 		/// <summary>
@@ -62,8 +62,8 @@ namespace MackLib
 
 			header.Signature = br.ReadBytes(4);
 			header.Version = br.ReadInt32();
-			header.ClientVersion = br.ReadUInt32();
-			header.FileCount1 = br.ReadUInt32();
+			header.ClientVersion = br.ReadInt32();
+			header.FileCount1 = br.ReadInt32();
 			header.FileTime1 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			header.FileTime2 = DateTime.FromFileTimeUtc(br.ReadInt64());
 
@@ -71,10 +71,10 @@ namespace MackLib
 			len = Array.IndexOf(strBuffer, (byte)0);
 			header.BasePath = Encoding.UTF8.GetString(strBuffer, 0, len);
 
-			header.FileCount2 = br.ReadUInt32();
-			header.ListLength = br.ReadUInt32();
-			header.BlankLength = br.ReadUInt32();
-			header.DataLength = br.ReadUInt32();
+			header.FileCount2 = br.ReadInt32();
+			header.ListLength = br.ReadInt32();
+			header.BlankLength = br.ReadInt32();
+			header.DataLength = br.ReadInt32();
 			header.Zero = br.ReadBytes(16);
 
 			return header;

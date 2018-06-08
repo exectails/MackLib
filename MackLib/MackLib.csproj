@@ -43,6 +43,7 @@
     <Compile Include="PackListNameType.cs" />
     <Compile Include="PackListEntry.cs" />
     <Compile Include="PackHeader.cs" />
+    <Compile Include="PackFile.cs" />
     <Compile Include="PackReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ucl\Ucl.cs" />

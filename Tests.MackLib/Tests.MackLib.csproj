@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PackFile.cs" />
     <Compile Include="PackReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
