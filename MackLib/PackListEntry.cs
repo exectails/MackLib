@@ -214,9 +214,9 @@ namespace MackLib
 			if (this.Header.Version == 1)
 				return;
 
-			var mt = new MTRandom((uint)((this.Seed << 7) ^ 0xA9C36DE1));
+			var mt = new MTRandom((this.Seed << 7) ^ 0xA9C36DE1);
 
-			for (int i = 0; i < buffer.Length; ++i)
+			for (var i = 0; i < buffer.Length; ++i)
 				buffer[i] = (byte)(buffer[i] ^ mt.GetUInt32());
 		}
 

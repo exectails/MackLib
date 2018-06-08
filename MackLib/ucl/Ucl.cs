@@ -37,7 +37,7 @@ namespace MackLib.UclCompression
 		{
 			uint bb = 0;
 			uint ilen = 0, olen = 0, last_m_off = 1;
-			uint oend = dst_len;
+			var oend = dst_len;
 
 			uint getbit()
 			{

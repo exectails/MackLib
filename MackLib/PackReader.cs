@@ -152,7 +152,7 @@ namespace MackLib
 
 			var header = PackHeader.ReadFrom(br, filePath);
 
-			for (int i = 0; i < header.FileCount2; ++i)
+			for (var i = 0; i < header.FileCount2; ++i)
 			{
 				var entry = PackListEntry.ReadFrom(header, br);
 

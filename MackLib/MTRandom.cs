@@ -32,9 +32,9 @@
 			_mti = N;
 			_mt = new uint[N];
 
-			uint x = seed;
+			var x = seed;
 			_mt[0] = x;
-			for (int i = 1; i < N; i++)
+			for (var i = 1; i < N; i++)
 			{
 				x = 1812433253U * (x ^ (x >> 30)) + (uint)i;
 				_mt[i] = x;
@@ -49,27 +49,27 @@
 		{
 			if (_mti >= N)
 			{
-				for (int i = 0; i < N - M; i++)
+				for (var i = 0; i < N - M; i++)
 				{
-					uint x = _mt[i];
+					var x = _mt[i];
 					x ^= (x ^ _mt[i + 1]) & 0x7FFFFFFF;
 					_mt[i] = _mt[i + M] ^ (x >> 1) ^ ((x & 1) == 0 ? 0 : MATRIX_A);
 				}
-				for (int i = N - M; i < N - 1; i++)
+				for (var i = N - M; i < N - 1; i++)
 				{
-					uint x = _mt[i];
+					var x = _mt[i];
 					x ^= (x ^ _mt[i + 1]) & 0x7FFFFFFF;
 					_mt[i] = _mt[i + M - N] ^ (x >> 1) ^ ((x & 1) == 0 ? 0 : MATRIX_A);
 				}
 				{
-					uint x = _mt[N - 1];
+					var x = _mt[N - 1];
 					x ^= (x ^ _mt[0]) & 0x7FFFFFFF;
 					_mt[N - 1] = _mt[M - 1] ^ (x >> 1) ^ ((x & 1) == 0 ? 0 : MATRIX_A);
 				}
 				_mti = 0;
 			}
 
-			uint y = _mt[_mti++];
+			var y = _mt[_mti++];
 			y ^= (y >> 11);
 			y ^= (y << 7) & 0x9D2C5680U;
 			y ^= (y << 15) & 0xEFC60000U;

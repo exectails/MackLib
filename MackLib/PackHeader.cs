@@ -22,7 +22,7 @@ namespace MackLib
 
 		// 32 B
 		public uint FileCount2 { get; internal set; }
-		public uint ListLength { get; internal set; } // incl blank
+		public uint ListLength { get; internal set; } // includes blank
 		public uint BlankLength { get; set; }
 		public uint DataLength { get; set; }
 		public byte[/*16*/] Zero { get; set; }
