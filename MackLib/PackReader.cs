@@ -9,6 +9,8 @@ namespace MackLib
 {
 	public class PackReader : IDisposable
 	{
+		private readonly object _syncLock = new object();
+
 		private Dictionary<string, PackListEntry> _entries = new Dictionary<string, PackListEntry>();
 		private Dictionary<string, List<PackListEntry>> _entriesNamed = new Dictionary<string, List<PackListEntry>>();
 		private List<FileStream> _fileStreams = new List<FileStream>();
@@ -63,16 +65,19 @@ namespace MackLib
 		/// </summary>
 		public void Dispose()
 		{
-			foreach (var br in _binaryReaders)
+			lock (_syncLock)
 			{
-				try { br.Close(); }
-				catch { }
-			}
+				foreach (var br in _binaryReaders)
+				{
+					try { br.Close(); }
+					catch { }
+				}
 
-			foreach (var fs in _fileStreams)
-			{
-				try { fs.Close(); }
-				catch { }
+				foreach (var fs in _fileStreams)
+				{
+					try { fs.Close(); }
+					catch { }
+				}
 			}
 		}
 
@@ -85,7 +90,7 @@ namespace MackLib
 		{
 			fullName = fullName.ToLower();
 
-			lock (_entries)
+			lock (_syncLock)
 				return _entries.ContainsKey(fullName);
 		}
 
@@ -101,7 +106,7 @@ namespace MackLib
 
 			PackListEntry result;
 
-			lock (_entriesNamed)
+			lock (_syncLock)
 				_entries.TryGetValue(filePath, out result);
 
 			return result;
@@ -119,7 +124,7 @@ namespace MackLib
 
 			List<PackListEntry> result;
 
-			lock (_entriesNamed)
+			lock (_syncLock)
 				_entriesNamed.TryGetValue(fileName, out result);
 
 			if (result == null)
@@ -134,7 +139,7 @@ namespace MackLib
 		/// <returns></returns>
 		public List<PackListEntry> GetEntries()
 		{
-			lock (_entries)
+			lock (_syncLock)
 				return _entries.Values.ToList();
 		}
 
@@ -147,21 +152,23 @@ namespace MackLib
 			var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 			var br = new BinaryReader(fs, Encoding.ASCII);
 
-			_fileStreams.Add(fs);
-			_binaryReaders.Add(br);
+			lock (_syncLock)
+			{
+				_fileStreams.Add(fs);
+				_binaryReaders.Add(br);
+			}
 
 			var header = PackHeader.ReadFrom(br, filePath);
 
 			for (var i = 0; i < header.FileCount2; ++i)
 			{
 				var entry = PackListEntry.ReadFrom(header, br);
-				var fullPath = (header.BasePath + entry.RelativePath);
+				var fullPath = (header.BasePath + entry.RelativePath).ToLower();
 
-				lock (_entries)
-					_entries[fullPath.ToLower()] = entry;
-
-				lock (_entriesNamed)
+				lock (_syncLock)
 				{
+					_entries[fullPath] = entry;
+
 					var key = entry.FileName.ToLower();
 
 					if (!_entriesNamed.ContainsKey(key))
