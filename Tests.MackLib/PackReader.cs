@@ -42,13 +42,52 @@ namespace Tests.MackLib
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
 			using (var pr = new PackReader(path))
 			{
-				Console.WriteLine(path);
 				var itemdb = pr.GetEntry(@"data\db\itemdb.xml");
 				Assert.NotEqual(null, itemdb);
 
 				var data = itemdb.GetData();
 				Assert.Equal("FF-FE-3C-00-3F-00-78-00-6D-00-6C-00-20-00-76-00-65-00-72-00-73-00-69-00-6F-00-6E-00-3D-00-22-00-31-00-2E-00-30-00-22-00-20-00-65-00-6E-00-63-00-6F-00-64-00-69-00-6E-00-67-00-3D-00-22-00-75-00-74-00-66-00-2D-00-31-00-36-00-22-00-3F-00-3E-00-0D-00-0A-00-3C-00-21-00-2D-00-2D-00-20-00-44-00-4F-00-20-00-4E-00-4F-00-54-00-20-00-45-00-44-00-49-00-54-00-20-00-54-00-48-00-49-00-53-00-20-00-46-00-49-00-4C-00-45-00-21-00-20-00-2D-00-2D-00-3E-00-0D-00-0A-00-3C-00-49-00-74-00-65-00-6D-00-73-00-3E-00", BitConverter.ToString(data, 0, 164));
 			}
+		}
+
+
+		[Fact]
+		public void RepeatExtract()
+		{
+			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package");
+			var tempPath = Path.GetTempFileName();
+
+			using (var pr = new PackReader(path))
+			{
+				// File 1
+				var entry = pr.GetEntry(@"data\db\petexcitedalodesc.xml");
+				var data1 = entry.GetData();
+
+				entry.ExtractFile(tempPath);
+				var data2 = File.ReadAllBytes(tempPath);
+
+				Assert.Equal(data1, data2);
+
+				// File 2
+				entry = pr.GetEntry(@"data\vf.dat");
+				data1 = entry.GetData();
+
+				entry.ExtractFile(tempPath);
+				data2 = File.ReadAllBytes(tempPath);
+
+				Assert.Equal(data1, data2);
+
+				// File 3
+				entry = pr.GetEntry(@"data\local\world.english.txt");
+				data1 = entry.GetData();
+
+				entry.ExtractFile(tempPath);
+				data2 = File.ReadAllBytes(tempPath);
+
+				Assert.Equal(data1, data2);
+			}
+
+			File.Delete(tempPath);
 		}
 
 		[Fact]
