@@ -16,8 +16,7 @@ namespace MackLib
 		string RelativePath { get; set; }
 		uint Seed { get; set; }
 		uint Zero { get; set; }
-		uint CompressedSize { get; }
-		uint DecompressedSize { get; }
+		uint FileSize { get; }
 		bool IsCompressed { get; set; }
 		DateTime FileTime1 { get; set; }
 		DateTime FileTime2 { get; set; }
@@ -56,8 +55,7 @@ namespace MackLib
 		public string RelativePath { get; set; }
 		public uint Seed { get; set; } = 1;
 		public uint Zero { get; set; }
-		public uint CompressedSize { get; }
-		public uint DecompressedSize { get; }
+		public uint FileSize { get; }
 		public bool IsCompressed { get; set; } = true;
 		public DateTime FileTime1 { get; set; } = DateTime.Now;
 		public DateTime FileTime2 { get; set; } = DateTime.Now;
@@ -81,8 +79,7 @@ namespace MackLib
 
 			this.FilePath = filePath;
 			this.RelativePath = relativePath;
-			this.CompressedSize = (uint)fileInfo.Length;
-			this.DecompressedSize = (uint)fileInfo.Length;
+			this.FileSize = (uint)fileInfo.Length;
 			this.FileTime1 = fileInfo.CreationTime;
 			this.FileTime3 = fileInfo.LastAccessTime;
 			this.FileTime5 = fileInfo.LastWriteTime;
@@ -131,7 +128,7 @@ namespace MackLib
 		public uint Zero { get; set; }
 		public uint DataOffset { get; internal set; }
 		public uint CompressedSize { get; internal set; }
-		public uint DecompressedSize { get; internal set; }
+		public uint FileSize { get; internal set; }
 		public bool IsCompressed { get; set; }
 		public DateTime FileTime1 { get; set; }
 		public DateTime FileTime2 { get; set; }
@@ -230,8 +227,8 @@ namespace MackLib
 			entry.Zero = br.ReadUInt32();
 			entry.DataOffset = br.ReadUInt32();
 			entry.CompressedSize = br.ReadUInt32();
-			entry.DecompressedSize = br.ReadUInt32();
-			entry.IsCompressed = (br.ReadUInt32() != 0);
+			entry.FileSize = br.ReadUInt32();
+			entry.IsCompressed = (br.ReadUInt32() != 0); // compression strength?
 			entry.FileTime1 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			entry.FileTime2 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			entry.FileTime3 = DateTime.FromFileTimeUtc(br.ReadInt64());
@@ -354,7 +351,7 @@ namespace MackLib
 			}
 			else
 			{
-				var uncompressed = Ucl.Decompress_NRV2E(buffer, this.DecompressedSize);
+				var uncompressed = Ucl.Decompress_NRV2E(buffer, this.FileSize);
 
 				using (var ms = new MemoryStream(uncompressed))
 					ms.CopyTo(outStream);
