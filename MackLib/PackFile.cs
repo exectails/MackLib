@@ -211,7 +211,7 @@ namespace MackLib
 		/// Writes pack file to given location.
 		/// </summary>
 		/// <param name="filePath"></param>
-		public void Save(string filePath)
+		public void Save(string filePath, CompressionStrength compression = CompressionStrength.Default)
 		{
 			var blankLength = this.Header.BlankLength;
 			var fileCount = this.Count;
@@ -305,7 +305,7 @@ namespace MackLib
 
 						using (var ms = new MemoryStream())
 						{
-							var zlib = new ZOutputStream(ms, zlibConst.Z_DEFAULT_COMPRESSION);
+							var zlib = new ZOutputStream(ms, (int)compression);
 							zlib.Write(data, 0, data.Length);
 							zlib.finish();
 

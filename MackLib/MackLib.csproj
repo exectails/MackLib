@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompressionStrength.cs" />
     <Compile Include="MTRandom.cs" />
     <Compile Include="PackListNameType.cs" />
     <Compile Include="PackListEntry.cs" />

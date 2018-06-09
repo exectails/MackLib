@@ -154,10 +154,8 @@ namespace Tests.MackLib
 
 			var packFile = new PackFile();
 			packFile.AddFile(fileTempPath, @"foobar\test1.txt");
-			packFile.AddFolder("c:/users/exec/desktop/Neuer Ordner");
 
-			packFile.Save(packTempPath);
-			//packFile.Save("c:/users/exec/desktop/test.pack");
+			packFile.Save(packTempPath, CompressionStrength.Default);
 
 			// Check pack
 			using (var pf = new PackFile(packTempPath))
