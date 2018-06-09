@@ -114,6 +114,34 @@ namespace Tests.MackLib
 		}
 
 		[Fact]
+		public void Save()
+		{
+			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var contents = File.ReadAllBytes(path);
+			var tempPath = Path.GetTempFileName();
+
+			using (var pf = new PackFile(path))
+			{
+				pf.Save(tempPath);
+			}
+
+			using (var pf = new PackFile(tempPath))
+			{
+				var entry = pf.GetEntry(@"data\local\xml\auctioncategory.english.txt");
+				Assert.NotEqual(null, entry);
+
+				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
+				{
+					Assert.Equal(sr.ReadLine(), "1\tMelee Weapon");
+					Assert.Equal(sr.ReadLine(), "2\tOne-Handed");
+					Assert.Equal(sr.ReadLine(), "3\tTwo-Handed");
+				}
+			}
+
+			File.Delete(tempPath);
+		}
+
+		[Fact]
 		public void GetEntriesByFileName()
 		{
 			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");

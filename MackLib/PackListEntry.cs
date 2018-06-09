@@ -106,8 +106,8 @@ namespace MackLib
 			}
 			else if (entry.NameType == PackListNameType.LDyn)
 			{
-				var size = (int)br.ReadUInt32() + 5;
-				strBuffer = br.ReadBytes(size - 1 - 4);
+				var size = (int)br.ReadUInt32();
+				strBuffer = br.ReadBytes(size);
 			}
 			else
 				throw new Exception("Unknown entry name type '" + entry.NameType + "'.");
@@ -169,7 +169,7 @@ namespace MackLib
 		/// <summary>
 		/// Returns raw decompressed data as memory stream.
 		/// </summary>
-		/// <returns>Stream with the data, has to be closed by the user.</returns>
+		/// <returns>Stream with the data, has to be closed by the caller.</returns>
 		public MemoryStream GetDataAsStream()
 		{
 			return new MemoryStream(this.GetData());
