@@ -14,8 +14,8 @@ namespace MackLib
 	{
 		private readonly object _syncLock = new object();
 
-		private Dictionary<string, PackListEntry> _entries = new Dictionary<string, PackListEntry>();
-		private Dictionary<string, List<PackListEntry>> _entriesNamed = new Dictionary<string, List<PackListEntry>>();
+		private Dictionary<string, IPackListEntry> _entries = new Dictionary<string, IPackListEntry>();
+		private Dictionary<string, List<IPackListEntry>> _entriesNamed = new Dictionary<string, List<IPackListEntry>>();
 		private Stream _fs;
 		private BinaryReader _br;
 
@@ -32,12 +32,20 @@ namespace MackLib
 		/// <summary>
 		/// Amount of entries in this pack file.
 		/// </summary>
-		public int Count { get { return this.Header.FileCount2; } }
+		public int Count { get { lock (_syncLock) return _entries.Count; } }
 
 		/// <summary>
-		/// Creates new pack reader for given file or folder.
+		/// Creates a new pack file.
 		/// </summary>
-		/// <param name="filePath">File or folder path. If it's a folder the reader reads all *.pack files in the top directory.</param>
+		public PackFile()
+		{
+			this.Header = new PackHeader();
+		}
+
+		/// <summary>
+		/// Creates new pack reader for given file.
+		/// </summary>
+		/// <param name="filePath"></param>
 		public PackFile(string filePath)
 		{
 			if (!File.Exists(filePath))
@@ -70,6 +78,56 @@ namespace MackLib
 		}
 
 		/// <summary>
+		/// Adds entry to pack.
+		/// </summary>
+		/// <param name="entry"></param>
+		public void AddEntry(IPackListEntry entry)
+		{
+			var fullPath = (this.Header.BasePath + entry.RelativePath).ToLower();
+			var fileName = Path.GetFileName(fullPath).ToLower();
+
+			lock (_syncLock)
+			{
+				_entries[fullPath] = entry;
+
+				if (!_entriesNamed.ContainsKey(fileName))
+					_entriesNamed[fileName] = new List<IPackListEntry>();
+				_entriesNamed[fileName].Add(entry);
+			}
+		}
+
+		/// <summary>
+		/// Adds file to pack.
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <param name="relativePath"></param>
+		public void AddFile(string filePath, string relativePath)
+		{
+			this.AddEntry(new FileEntry(filePath, relativePath));
+		}
+
+		/// <summary>
+		/// Adds all files in folder to pack.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <exception cref="ArgumentException">
+		/// Thrown if folder doesn't exist.
+		/// </exception>
+		public void AddFolder(string path)
+		{
+			if (!Directory.Exists(path))
+				throw new ArgumentException("Directory not found");
+
+			var rootPath = Path.GetFullPath(path).Replace("/", "\\").TrimEnd('\\') + "\\";
+
+			foreach (var filePath in Directory.EnumerateFiles(rootPath, "*", SearchOption.AllDirectories))
+			{
+				var relativePath = filePath.Replace(rootPath, "");
+				this.AddFile(filePath, relativePath);
+			}
+		}
+
+		/// <summary>
 		/// Returns true if a file with the given full name exists.
 		/// </summary>
 		/// <param name="fullName"></param>
@@ -88,11 +146,11 @@ namespace MackLib
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <returns></returns>
-		public PackListEntry GetEntry(string filePath)
+		public IPackListEntry GetEntry(string filePath)
 		{
 			filePath = filePath.ToLower();
 
-			PackListEntry result;
+			IPackListEntry result;
 
 			lock (_syncLock)
 				_entries.TryGetValue(filePath, out result);
@@ -106,17 +164,17 @@ namespace MackLib
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
-		public List<PackListEntry> GetEntriesByFileName(string fileName)
+		public List<IPackListEntry> GetEntriesByFileName(string fileName)
 		{
 			fileName = fileName.ToLower();
 
-			List<PackListEntry> result;
+			List<IPackListEntry> result;
 
 			lock (_syncLock)
 				_entriesNamed.TryGetValue(fileName, out result);
 
 			if (result == null)
-				return new List<PackListEntry>();
+				return new List<IPackListEntry>();
 
 			return result.ToList();
 		}
@@ -125,7 +183,7 @@ namespace MackLib
 		/// Returns list of all entries.
 		/// </summary>
 		/// <returns></returns>
-		public List<PackListEntry> GetEntries()
+		public List<IPackListEntry> GetEntries()
 		{
 			lock (_syncLock)
 				return _entries.Values.ToList();
@@ -144,19 +202,8 @@ namespace MackLib
 
 			for (var i = 0; i < this.Header.FileCount2; ++i)
 			{
-				var entry = PackListEntry.ReadFrom(this.Header, _br);
-				var fullPath = entry.FullName.ToLower();
-
-				lock (_syncLock)
-				{
-					_entries[fullPath] = entry;
-
-					var key = entry.FileName.ToLower();
-
-					if (!_entriesNamed.ContainsKey(key))
-						_entriesNamed[key] = new List<PackListEntry>();
-					_entriesNamed[key].Add(entry);
-				}
+				var entry = PackedFileEntry.ReadFrom(this.Header, _br);
+				this.AddEntry(entry);
 			}
 		}
 
@@ -166,24 +213,23 @@ namespace MackLib
 		/// <param name="filePath"></param>
 		public void Save(string filePath)
 		{
-			_entries["test.txt"] = _entries.Values.First();
-
 			var blankLength = this.Header.BlankLength;
+			var fileCount = this.Count;
 
 			using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
 			using (var bw = new BinaryWriter(fs))
 			{
-				var entryStarts = new Dictionary<PackListEntry, long>();
+				var entryStarts = new Dictionary<IPackListEntry, long>();
 
 				// Header
 				bw.Write(this.Header.Signature);
 				bw.Write(this.Header.Version);
 				bw.Write(this.Header.ClientVersion);
-				bw.Write(this.Header.FileCount1);
+				bw.Write(fileCount);
 				bw.Write(this.Header.FileTime1.ToFileTimeUtc());
 				bw.Write(this.Header.FileTime2.ToFileTimeUtc());
 				bw.Write(Encoding.UTF8.GetBytes(this.Header.BasePath.PadRight(480, '\0')));
-				bw.Write(this.Header.FileCount2);
+				bw.Write(fileCount);
 
 				var headerLengthsStart = bw.BaseStream.Position;
 				bw.Write(this.Header.ListLength);
@@ -225,9 +271,9 @@ namespace MackLib
 					bw.Write(entry.Zero);
 
 					entryStarts[entry] = bw.BaseStream.Position;
-					bw.Write(entry.DataOffset);
-					bw.Write(entry.CompressedSize);
-					bw.Write(entry.DecompressedSize);
+					bw.Write(0); // DataOffset
+					bw.Write(0); // CompressedSize
+					bw.Write(0); // DecompressedSize
 
 					bw.Write(entry.IsCompressed ? 1 : 0);
 					bw.Write(entry.FileTime1.ToFileTimeUtc());

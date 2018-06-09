@@ -46,6 +46,9 @@ namespace MackLib
 			this.Signature = new byte[] { (byte)'P', (byte)'A', (byte)'C', (byte)'K' };
 			this.Version = 258;
 			this.ClientVersion = 1;
+			this.FileTime1 = DateTime.Now;
+			this.FileTime2 = DateTime.Now;
+			this.BasePath = @"data\";
 			this.Zero = new byte[16];
 		}
 

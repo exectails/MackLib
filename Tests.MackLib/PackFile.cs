@@ -37,7 +37,8 @@ namespace Tests.MackLib
 				var entry = pf.GetEntry(@"data\local\xml\arbeit.english.txt");
 				Assert.NotEqual(null, entry);
 
-				using (var sr = new StreamReader(entry.GetDataAsStream()))
+				using (var ms = new MemoryStream(entry.GetData()))
+				using (var sr = new StreamReader(ms))
 				{
 					Assert.Equal(sr.ReadLine(), "1\tGeneral");
 					Assert.Equal(sr.ReadLine(), "2\tGrocery Store");
@@ -55,7 +56,8 @@ namespace Tests.MackLib
 				var entry = pf.GetEntry(@"data\local\xml\arbeit.english.txt");
 				Assert.NotEqual(null, entry);
 
-				using (var sr = new StreamReader(entry.GetDataAsStream()))
+				using (var ms = new MemoryStream(entry.GetData()))
+				using (var sr = new StreamReader(ms))
 				{
 					Assert.Equal(sr.ReadLine(), "1\tGeneral");
 					Assert.Equal(sr.ReadLine(), "2\tGrocery Store");
@@ -139,6 +141,80 @@ namespace Tests.MackLib
 			}
 
 			File.Delete(tempPath);
+		}
+
+		[Fact]
+		public void Create()
+		{
+			// Create pack
+			var fileTempPath = Path.GetTempFileName();
+			var packTempPath = Path.GetTempFileName();
+
+			File.WriteAllText(fileTempPath, "foo1\nbar1");
+
+			var packFile = new PackFile();
+			packFile.AddFile(fileTempPath, @"foobar\test1.txt");
+			packFile.AddFolder("c:/users/exec/desktop/Neuer Ordner");
+
+			packFile.Save(packTempPath);
+			//packFile.Save("c:/users/exec/desktop/test.pack");
+
+			// Check pack
+			using (var pf = new PackFile(packTempPath))
+			{
+				var entry = pf.GetEntry(@"data\foobar\test1.txt");
+				Assert.NotEqual(null, entry);
+
+				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
+				{
+					Assert.Equal(sr.ReadLine(), "foo1");
+					Assert.Equal(sr.ReadLine(), "bar1");
+					Assert.Equal(sr.ReadLine(), null);
+				}
+			}
+
+			// Add second file to pack
+			File.WriteAllText(fileTempPath, "foo2\nbar2");
+
+			packFile.AddFile(fileTempPath, @"foobar\test2.txt");
+			packFile.Save(packTempPath);
+
+			// Check modified pack
+			using (var pf = new PackFile(packTempPath))
+			{
+				var entry = pf.GetEntry(@"data\foobar\test2.txt");
+				Assert.NotEqual(null, entry);
+
+				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
+				{
+					Assert.Equal(sr.ReadLine(), "foo2");
+					Assert.Equal(sr.ReadLine(), "bar2");
+					Assert.Equal(sr.ReadLine(), null);
+				}
+			}
+
+			// Overwrite first file in pack
+			File.WriteAllText(fileTempPath, "foo3\nbar3");
+
+			packFile.AddFile(fileTempPath, @"foobar\test1.txt");
+			packFile.Save(packTempPath);
+
+			// Check modified pack
+			using (var pf = new PackFile(packTempPath))
+			{
+				var entry = pf.GetEntry(@"data\foobar\test1.txt");
+				Assert.NotEqual(null, entry);
+
+				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
+				{
+					Assert.Equal(sr.ReadLine(), "foo3");
+					Assert.Equal(sr.ReadLine(), "bar3");
+					Assert.Equal(sr.ReadLine(), null);
+				}
+			}
+
+			File.Delete(fileTempPath);
+			File.Delete(packTempPath);
 		}
 
 		[Fact]

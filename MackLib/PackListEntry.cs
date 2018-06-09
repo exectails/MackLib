@@ -7,9 +7,120 @@ using System.Text;
 namespace MackLib
 {
 	/// <summary>
-	/// Represents entry in pack list.
+	/// Represents an entry in a pack's file list.
 	/// </summary>
-	public class PackListEntry
+	public interface IPackListEntry
+	{
+		// struct
+		PackListNameType NameType { get; set; }
+		string RelativePath { get; set; }
+		uint Seed { get; set; }
+		uint Zero { get; set; }
+		uint CompressedSize { get; }
+		uint DecompressedSize { get; }
+		bool IsCompressed { get; set; }
+		DateTime FileTime1 { get; set; }
+		DateTime FileTime2 { get; set; }
+		DateTime FileTime3 { get; set; }
+		DateTime FileTime4 { get; set; }
+		DateTime FileTime5 { get; set; }
+
+		/// <summary>
+		/// Returns the file's raw, potentially compressed and encoded data.
+		/// </summary>
+		/// <returns></returns>
+		byte[] GetRawData();
+
+		/// <summary>
+		/// Returns the file's uncompressed data.
+		/// </summary>
+		/// <returns></returns>
+		byte[] GetData();
+
+		/// <summary>
+		/// Returns a file stream to the uncompressed file. The file might
+		/// get extracted to the temp folder to enable this.
+		/// </summary>
+		/// <returns></returns>
+		FileStream GetDataAsFileStream();
+	}
+
+	/// <summary>
+	/// Represents an entry in a pack's file list, based on an actual
+	/// file. On save this is written to the pack and turns into a
+	/// PackedFileEntry on loading it.
+	/// </summary>
+	public class FileEntry : IPackListEntry
+	{
+		public PackListNameType NameType { get; set; } = PackListNameType.LDyn;
+		public string RelativePath { get; set; }
+		public uint Seed { get; set; } = 1;
+		public uint Zero { get; set; }
+		public uint CompressedSize { get; }
+		public uint DecompressedSize { get; }
+		public bool IsCompressed { get; set; } = true;
+		public DateTime FileTime1 { get; set; } = DateTime.Now;
+		public DateTime FileTime2 { get; set; } = DateTime.Now;
+		public DateTime FileTime3 { get; set; } = DateTime.Now;
+		public DateTime FileTime4 { get; set; } = DateTime.Now;
+		public DateTime FileTime5 { get; set; } = DateTime.Now;
+
+		/// <summary>
+		/// Returns the path to the file.
+		/// </summary>
+		public string FilePath { get; }
+
+		/// <summary>
+		/// Creates new instance.
+		/// </summary>
+		/// <param name="filePath">Path to the file.</param>
+		/// <param name="relativePath">Relative path to the file inside the pack file.</param>
+		public FileEntry(string filePath, string relativePath)
+		{
+			var fileInfo = new FileInfo(filePath);
+
+			this.FilePath = filePath;
+			this.RelativePath = relativePath;
+			this.CompressedSize = (uint)fileInfo.Length;
+			this.DecompressedSize = (uint)fileInfo.Length;
+			this.FileTime1 = fileInfo.CreationTime;
+			this.FileTime3 = fileInfo.LastAccessTime;
+			this.FileTime5 = fileInfo.LastWriteTime;
+		}
+
+		/// <summary>
+		/// Returns the file's data.
+		/// </summary>
+		/// <returns></returns>
+		public byte[] GetRawData()
+		{
+			return File.ReadAllBytes(this.FilePath);
+		}
+
+		/// <summary>
+		/// Returns the file's data.
+		/// </summary>
+		/// <returns></returns>
+		public byte[] GetData()
+		{
+			return this.GetRawData();
+		}
+
+		/// <summary>
+		/// Returns file stream for the file, needs to be closed by
+		/// the caller.
+		/// </summary>
+		/// <returns></returns>
+		public FileStream GetDataAsFileStream()
+		{
+			return new FileStream(this.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+		}
+	}
+
+	/// <summary>
+	/// Represents a file list entry from inside a pack file.
+	/// </summary>
+	public class PackedFileEntry : IPackListEntry
 	{
 		private BinaryReader _br;
 		private string _tempPath;
@@ -70,7 +181,7 @@ namespace MackLib
 		/// <param name="packFilePath"></param>
 		/// <param name="packHeader"></param>
 		/// <param name="binaryReader"></param>
-		internal PackListEntry(PackHeader packHeader, BinaryReader binaryReader)
+		internal PackedFileEntry(PackHeader packHeader, BinaryReader binaryReader)
 		{
 			_br = binaryReader;
 
@@ -85,12 +196,12 @@ namespace MackLib
 		/// <param name="packHeader"></param>
 		/// <param name="br"></param>
 		/// <returns></returns>
-		public static PackListEntry ReadFrom(PackHeader packHeader, BinaryReader br)
+		public static PackedFileEntry ReadFrom(PackHeader packHeader, BinaryReader br)
 		{
 			int len;
 			byte[] strBuffer;
 
-			var entry = new PackListEntry(packHeader, br);
+			var entry = new PackedFileEntry(packHeader, br);
 
 			entry.NameType = (PackListNameType)br.ReadByte();
 
@@ -189,15 +300,6 @@ namespace MackLib
 				this.Decompress(data, ms);
 				return ms.ToArray();
 			}
-		}
-
-		/// <summary>
-		/// Returns uncompressed data as memory stream.
-		/// </summary>
-		/// <returns>Stream with the data, has to be closed by the caller.</returns>
-		public MemoryStream GetDataAsStream()
-		{
-			return new MemoryStream(this.GetData());
 		}
 
 		/// <summary>

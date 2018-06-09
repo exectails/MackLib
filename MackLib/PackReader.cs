@@ -14,8 +14,8 @@ namespace MackLib
 	{
 		private readonly object _syncLock = new object();
 
-		private Dictionary<string, PackListEntry> _entries = new Dictionary<string, PackListEntry>();
-		private Dictionary<string, List<PackListEntry>> _entriesNamed = new Dictionary<string, List<PackListEntry>>();
+		private Dictionary<string, PackedFileEntry> _entries = new Dictionary<string, PackedFileEntry>();
+		private Dictionary<string, List<PackedFileEntry>> _entriesNamed = new Dictionary<string, List<PackedFileEntry>>();
 		private List<FileStream> _fileStreams = new List<FileStream>();
 		private List<BinaryReader> _binaryReaders = new List<BinaryReader>();
 
@@ -103,11 +103,11 @@ namespace MackLib
 		/// </summary>
 		/// <param name="filePath"></param>
 		/// <returns></returns>
-		public PackListEntry GetEntry(string filePath)
+		public PackedFileEntry GetEntry(string filePath)
 		{
 			filePath = filePath.ToLower();
 
-			PackListEntry result;
+			PackedFileEntry result;
 
 			lock (_syncLock)
 				_entries.TryGetValue(filePath, out result);
@@ -121,17 +121,17 @@ namespace MackLib
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <returns></returns>
-		public List<PackListEntry> GetEntriesByFileName(string fileName)
+		public List<PackedFileEntry> GetEntriesByFileName(string fileName)
 		{
 			fileName = fileName.ToLower();
 
-			List<PackListEntry> result;
+			List<PackedFileEntry> result;
 
 			lock (_syncLock)
 				_entriesNamed.TryGetValue(fileName, out result);
 
 			if (result == null)
-				return new List<PackListEntry>();
+				return new List<PackedFileEntry>();
 
 			return result.ToList();
 		}
@@ -140,7 +140,7 @@ namespace MackLib
 		/// Returns list of all entries.
 		/// </summary>
 		/// <returns></returns>
-		public List<PackListEntry> GetEntries()
+		public List<PackedFileEntry> GetEntries()
 		{
 			lock (_syncLock)
 				return _entries.Values.ToList();
@@ -165,7 +165,7 @@ namespace MackLib
 
 			for (var i = 0; i < header.FileCount2; ++i)
 			{
-				var entry = PackListEntry.ReadFrom(header, br);
+				var entry = PackedFileEntry.ReadFrom(header, br);
 				var fullPath = entry.FullName.ToLower();
 
 				lock (_syncLock)
@@ -175,7 +175,7 @@ namespace MackLib
 					var key = entry.FileName.ToLower();
 
 					if (!_entriesNamed.ContainsKey(key))
-						_entriesNamed[key] = new List<PackListEntry>();
+						_entriesNamed[key] = new List<PackedFileEntry>();
 					_entriesNamed[key].Add(entry);
 				}
 			}
