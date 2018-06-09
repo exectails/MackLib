@@ -9,6 +9,9 @@ namespace MackLib
 	/// </summary>
 	public class PackHeader
 	{
+		/// <summary>
+		/// The size of the header in bytes.
+		/// </summary>
 		public const int HeaderLength = 512 + 32;
 
 		// 512 B

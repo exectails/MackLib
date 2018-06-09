@@ -154,20 +154,45 @@ namespace MackLib
 		}
 
 		/// <summary>
-		/// Returns raw decompressed file data.
+		/// Returns the entry's raw, potentially compressed and encoded data.
+		/// </summary>
+		/// <returns></returns>
+		public byte[] GetRawData()
+		{
+			var dataListOffset = PackHeader.HeaderLength + this.Header.ListLength;
+
+			byte[] data;
+			lock (_br)
+			{
+				_br.BaseStream.Seek(dataListOffset + this.DataOffset, SeekOrigin.Begin);
+				data = _br.ReadBytes((int)this.CompressedSize);
+			}
+
+			return data;
+		}
+
+		/// <summary>
+		/// Returns entry's uncompressed data.
 		/// </summary>
 		/// <returns></returns>
 		public byte[] GetData()
 		{
+			var data = this.GetRawData();
+
+			if (!this.IsCompressed)
+				return data;
+
+			this.Decode(ref data);
+
 			using (var ms = new MemoryStream())
 			{
-				this.WriteData(ms);
+				this.Decompress(data, ms);
 				return ms.ToArray();
 			}
 		}
 
 		/// <summary>
-		/// Returns raw decompressed data as memory stream.
+		/// Returns uncompressed data as memory stream.
 		/// </summary>
 		/// <returns>Stream with the data, has to be closed by the caller.</returns>
 		public MemoryStream GetDataAsStream()
@@ -176,7 +201,8 @@ namespace MackLib
 		}
 
 		/// <summary>
-		/// Extracts the file to the temp folder and returns a file stream for it.
+		/// Extracts the uncompressed file to the temp folder and returns
+		/// a file stream for it.
 		/// </summary>
 		/// <returns>Stream with the data, has to be closed by the caller.</returns>
 		public FileStream GetDataAsFileStream()
@@ -190,26 +216,8 @@ namespace MackLib
 		/// <param name="stream"></param>
 		public void WriteData(Stream stream)
 		{
-			var start = PackHeader.HeaderLength + this.Header.ListLength;
-			// sizeof(PackageHeader) + sizeof(PackageListHeader) + headerLength
-
-			byte[] buffer;
-			lock (_br)
-			{
-				_br.BaseStream.Seek(start + this.DataOffset, SeekOrigin.Begin);
-				buffer = _br.ReadBytes((int)this.CompressedSize);
-			}
-
-			if (this.IsCompressed)
-			{
-				this.Decode(ref buffer);
-				this.Decompress(buffer, stream);
-			}
-			else
-			{
-				using (var ms = new MemoryStream(buffer))
-					ms.CopyTo(stream);
-			}
+			var data = this.GetData();
+			stream.Write(data, 0, data.Length);
 		}
 
 		/// <summary>
