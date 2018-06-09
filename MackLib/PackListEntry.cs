@@ -330,7 +330,7 @@ namespace MackLib
 		private void Decode(ref byte[] buffer)
 		{
 			// KR beta (v1) didn't have encoding yet
-			if (this.Header.Version == 1)
+			if (this.Header.FormatVersion == 1)
 				return;
 
 			var mt = new MTRandom((this.Seed << 7) ^ 0xA9C36DE1);
@@ -347,7 +347,7 @@ namespace MackLib
 		private void Decompress(byte[] buffer, Stream outStream)
 		{
 			// Use zlib for modern packs and UCL for KR beta (v1)
-			if (this.Header.Version > 1)
+			if (this.Header.FormatVersion > 1)
 			{
 				using (var zlib = new ZOutputStream(outStream))
 					zlib.Write(buffer, 0, buffer.Length);

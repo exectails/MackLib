@@ -223,8 +223,8 @@ namespace MackLib
 
 				// Header
 				bw.Write(this.Header.Signature);
-				bw.Write(this.Header.Version);
-				bw.Write(this.Header.ClientVersion);
+				bw.Write(this.Header.FormatVersion);
+				bw.Write(this.Header.PackVersion);
 				bw.Write(fileCount);
 				bw.Write(this.Header.FileTime1.ToFileTimeUtc());
 				bw.Write(this.Header.FileTime2.ToFileTimeUtc());

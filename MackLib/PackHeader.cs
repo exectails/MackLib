@@ -16,8 +16,8 @@ namespace MackLib
 
 		// 512 B
 		public byte[/*4*/] Signature { get; internal set; }
-		public int Version { get; set; }
-		public int ClientVersion { get; set; }
+		public int FormatVersion { get; set; }
+		public int PackVersion { get; set; }
 		public int FileCount1 { get; internal set; }
 		public DateTime FileTime1 { get; set; }
 		public DateTime FileTime2 { get; set; }
@@ -44,8 +44,8 @@ namespace MackLib
 		public PackHeader()
 		{
 			this.Signature = new byte[] { (byte)'P', (byte)'A', (byte)'C', (byte)'K' };
-			this.Version = 258;
-			this.ClientVersion = 1;
+			this.FormatVersion = 258;
+			this.PackVersion = 1;
 			this.FileTime1 = DateTime.Now;
 			this.FileTime2 = DateTime.Now;
 			this.BasePath = @"data\";
@@ -67,8 +67,8 @@ namespace MackLib
 			header.PackFilePath = packFilePath;
 
 			header.Signature = br.ReadBytes(4);
-			header.Version = br.ReadInt32();
-			header.ClientVersion = br.ReadInt32();
+			header.FormatVersion = br.ReadInt32();
+			header.PackVersion = br.ReadInt32();
 			header.FileCount1 = br.ReadInt32();
 			header.FileTime1 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			header.FileTime2 = DateTime.FromFileTimeUtc(br.ReadInt64());
