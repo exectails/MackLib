@@ -14,6 +14,7 @@ namespace MackLib
 		// struct
 		PackListNameType NameType { get; set; }
 		string RelativePath { get; set; }
+		string FileName { get; }
 		uint Seed { get; set; }
 		uint Zero { get; set; }
 		uint FileSize { get; }
@@ -53,6 +54,7 @@ namespace MackLib
 	{
 		public PackListNameType NameType { get; set; } = PackListNameType.LDyn;
 		public string RelativePath { get; set; }
+		public string FileName { get; set; }
 		public uint Seed { get; set; } = 1;
 		public uint Zero { get; set; }
 		public uint FileSize { get; }
@@ -79,6 +81,7 @@ namespace MackLib
 
 			this.FilePath = filePath;
 			this.RelativePath = relativePath;
+			this.FileName = Path.GetFileName(relativePath);
 			this.FileSize = (uint)fileInfo.Length;
 			this.FileTime1 = fileInfo.CreationTime;
 			this.FileTime3 = fileInfo.LastAccessTime;
@@ -157,7 +160,7 @@ namespace MackLib
 		/// <remarks>
 		/// Not part of the struct.
 		/// </remarks>
-		public string FileName { get; set; }
+		public string FileName { get; private set; }
 
 		/// <summary>
 		/// Returns the full path to the file, incl. base path.
