@@ -200,7 +200,7 @@ namespace MackLib
 
 			this.Header = PackHeader.ReadFrom(_br, filePath);
 
-			for (var i = 0; i < this.Header.FileCount2; ++i)
+			for (var i = 0; i < this.Header.ListFileCount; ++i)
 			{
 				var entry = PackedFileEntry.ReadFrom(this.Header, _br);
 				this.AddEntry(entry);

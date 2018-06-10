@@ -147,6 +147,28 @@ namespace MackLib
 		}
 
 		/// <summary>
+		/// Returns list of all entries in the given path.
+		/// </summary>
+		/// <returns></returns>
+		public List<PackedFileEntry> GetEntriesIn(string path)
+		{
+			lock (_syncLock)
+			{
+				return _entries.Values.Where(a =>
+				{
+					var fullPath = (a.Header.BasePath + a.RelativePath);
+					if (!fullPath.StartsWith(path))
+						return false;
+
+					var anyPathSeperatorsAfterPath = fullPath.IndexOf('\\', path.Length + 1) != -1;
+
+					return !anyPathSeperatorsAfterPath;
+				})
+				.ToList();
+			}
+		}
+
+		/// <summary>
 		/// Loads entries from the given pack file.
 		/// </summary>
 		/// <param name="filePath"></param>
@@ -163,7 +185,7 @@ namespace MackLib
 
 			var header = PackHeader.ReadFrom(br, filePath);
 
-			for (var i = 0; i < header.FileCount2; ++i)
+			for (var i = 0; i < header.ListFileCount; ++i)
 			{
 				var entry = PackedFileEntry.ReadFrom(header, br);
 				var fullPath = entry.FullName.ToLower();

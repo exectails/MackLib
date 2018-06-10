@@ -18,13 +18,13 @@ namespace MackLib
 		public byte[/*4*/] Signature { get; internal set; }
 		public int FormatVersion { get; set; }
 		public int PackVersion { get; set; }
-		public int FileCount1 { get; internal set; }
+		public int FileCount { get; internal set; }
 		public DateTime FileTime1 { get; set; }
 		public DateTime FileTime2 { get; set; }
 		public string/*char[480]*/ BasePath { get; set; }
 
 		// 32 B
-		public int FileCount2 { get; internal set; }
+		public int ListFileCount { get; internal set; }
 		public int ListLength { get; internal set; } // includes blank
 		public int BlankLength { get; set; }
 		public int DataLength { get; set; }
@@ -69,7 +69,7 @@ namespace MackLib
 			header.Signature = br.ReadBytes(4);
 			header.FormatVersion = br.ReadInt32();
 			header.PackVersion = br.ReadInt32();
-			header.FileCount1 = br.ReadInt32();
+			header.FileCount = br.ReadInt32();
 			header.FileTime1 = DateTime.FromFileTimeUtc(br.ReadInt64());
 			header.FileTime2 = DateTime.FromFileTimeUtc(br.ReadInt64());
 
@@ -77,7 +77,7 @@ namespace MackLib
 			len = Array.IndexOf(strBuffer, (byte)0);
 			header.BasePath = Encoding.UTF8.GetString(strBuffer, 0, len);
 
-			header.FileCount2 = br.ReadInt32();
+			header.ListFileCount = br.ReadInt32();
 			header.ListLength = br.ReadInt32();
 			header.BlankLength = br.ReadInt32();
 			header.DataLength = br.ReadInt32();
