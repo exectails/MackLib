@@ -15,6 +15,7 @@ namespace MackLib
 		public const int HeaderLength = 512 + 32;
 
 		// 512 B
+#pragma warning disable CS1591 // missing XML comments
 		public byte[/*4*/] Signature { get; internal set; }
 		public int FormatVersion { get; set; }
 		public int PackVersion { get; set; }
@@ -29,6 +30,7 @@ namespace MackLib
 		public int BlankLength { get; set; }
 		public int DataLength { get; set; }
 		public byte[/*16*/] Zero { get; set; }
+#pragma warning restore CS1591
 
 		/// <summary>
 		/// Returns path to the pack file that this header is part of.

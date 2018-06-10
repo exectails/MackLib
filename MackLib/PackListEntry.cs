@@ -12,6 +12,7 @@ namespace MackLib
 	public interface IPackListEntry
 	{
 		// struct
+#pragma warning disable CS1591 // missing XML comments
 		PackListNameType NameType { get; set; }
 		string RelativePath { get; set; }
 		string FileName { get; }
@@ -24,6 +25,7 @@ namespace MackLib
 		DateTime FileTime3 { get; set; }
 		DateTime FileTime4 { get; set; }
 		DateTime FileTime5 { get; set; }
+#pragma warning restore CS1591
 
 		/// <summary>
 		/// Returns the file's raw, potentially compressed and encoded data.
@@ -52,6 +54,7 @@ namespace MackLib
 	/// </summary>
 	public class FileEntry : IPackListEntry
 	{
+#pragma warning disable CS1591 // missing XML comments
 		public PackListNameType NameType { get; set; } = PackListNameType.LDyn;
 		public string RelativePath { get; set; }
 		public string FileName { get; set; }
@@ -64,6 +67,7 @@ namespace MackLib
 		public DateTime FileTime3 { get; set; } = DateTime.Now;
 		public DateTime FileTime4 { get; set; } = DateTime.Now;
 		public DateTime FileTime5 { get; set; } = DateTime.Now;
+#pragma warning restore CS1591
 
 		/// <summary>
 		/// Returns the path to the file.
@@ -125,6 +129,7 @@ namespace MackLib
 		private BinaryReader _br;
 		private string _tempPath;
 
+#pragma warning disable CS1591 // missing XML comments
 		public PackListNameType NameType { get; set; }
 		public string RelativePath { get; set; }
 		public uint Seed { get; set; }
@@ -138,6 +143,7 @@ namespace MackLib
 		public DateTime FileTime3 { get; set; }
 		public DateTime FileTime4 { get; set; }
 		public DateTime FileTime5 { get; set; }
+#pragma warning restore CS1591
 
 		/// <summary>
 		/// Time the file was created.
@@ -178,7 +184,6 @@ namespace MackLib
 		/// <summary>
 		/// Creates new list entry.
 		/// </summary>
-		/// <param name="packFilePath"></param>
 		/// <param name="packHeader"></param>
 		/// <param name="binaryReader"></param>
 		internal PackedFileEntry(PackHeader packHeader, BinaryReader binaryReader)
@@ -192,7 +197,6 @@ namespace MackLib
 		/// <summary>
 		/// Reads pack list entry from reader and returns it.
 		/// </summary>
-		/// <param name="packFilePath"></param>
 		/// <param name="packHeader"></param>
 		/// <param name="br"></param>
 		/// <returns></returns>
@@ -326,7 +330,6 @@ namespace MackLib
 		/// Decodes buffer.
 		/// </summary>
 		/// <param name="buffer"></param>
-		/// <param name="seed"></param>
 		private void Decode(ref byte[] buffer)
 		{
 			// KR beta (v1) didn't have encoding yet

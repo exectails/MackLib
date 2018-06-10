@@ -1,6 +1,6 @@
 ﻿namespace MackLib.UclCompression
 {
-	public enum UclResult
+	internal enum UclResult
 	{
 		Ok,
 		InputOverrun,

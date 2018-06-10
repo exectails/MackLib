@@ -211,6 +211,7 @@ namespace MackLib
 		/// Writes pack file to given location.
 		/// </summary>
 		/// <param name="filePath"></param>
+		/// <param name="compression"></param>
 		public void Save(string filePath, CompressionStrength compression = CompressionStrength.Default)
 		{
 			var blankLength = this.Header.BlankLength;

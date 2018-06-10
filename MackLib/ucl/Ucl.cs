@@ -5,7 +5,7 @@ namespace MackLib.UclCompression
 	/// <summary>
 	/// Compression for KR beta client.
 	/// </summary>
-	public static class Ucl
+	internal static class Ucl
 	{
 		/// <summary>
 		/// Decompresses array to given size and returns it.
