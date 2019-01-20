@@ -257,7 +257,7 @@ namespace MackLib
 			if (outPath == null)
 			{
 				if (_tempPath == null)
-					_tempPath = Path.GetTempFileName() + Path.GetExtension(this.FileName);
+					_tempPath = Path.GetTempFileName();
 
 				outPath = _tempPath;
 			}
@@ -313,7 +313,7 @@ namespace MackLib
 		/// <returns>Stream with the data, has to be closed by the caller.</returns>
 		public FileStream GetDataAsFileStream()
 		{
-			return new FileStream(this.ExtractFile(), FileMode.Open, FileAccess.Read, FileShare.Read);
+			return new FileStream(this.ExtractFile(), FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.DeleteOnClose);
 		}
 
 		/// <summary>
