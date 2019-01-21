@@ -16,7 +16,7 @@ namespace MackLib
 		PackListNameType NameType { get; set; }
 		string RelativePath { get; set; }
 		string FileName { get; }
-		uint Seed { get; set; }
+		uint Seed { get; set; } // File Version? Seems to be responsible for deciding which file to use.
 		uint Zero { get; set; }
 		uint FileSize { get; }
 		bool IsCompressed { get; set; }

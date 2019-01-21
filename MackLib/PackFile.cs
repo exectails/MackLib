@@ -268,7 +268,7 @@ namespace MackLib
 					else
 						throw new Exception("Unknown entry name type '" + entry.NameType + "'.");
 
-					bw.Write(entry.Seed);
+					bw.Write(this.Header.PackVersion); // bw.Write(entry.Seed);
 					bw.Write(entry.Zero);
 
 					entryStarts[entry] = bw.BaseStream.Position;
