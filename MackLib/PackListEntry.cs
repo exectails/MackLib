@@ -349,18 +349,20 @@ namespace MackLib
 		/// <param name="outStream"></param>
 		private void Decompress(byte[] buffer, Stream outStream)
 		{
-			// Use zlib for modern packs and UCL for KR beta (v1)
-			if (this.Header.FormatVersion > 1)
-			{
-				using (var zlib = new ZOutputStream(outStream))
-					zlib.Write(buffer, 0, buffer.Length);
-			}
-			else
+			// Use UCL for old KR packs
+			// v1: KR72 (Beta Client)
+			// v257 from 2006: KR281
+			if (this.Header.FormatVersion == 1 || (this.Header.FormatVersion == 257 && this.Header.FileTime1.Year == 2006))
 			{
 				var uncompressed = Ucl.Decompress_NRV2E(buffer, this.FileSize);
 
 				using (var ms = new MemoryStream(uncompressed))
 					ms.CopyTo(outStream);
+			}
+			else
+			{
+				using (var zlib = new ZOutputStream(outStream))
+					zlib.Write(buffer, 0, buffer.Length);
 			}
 		}
 	}
