@@ -307,6 +307,16 @@ namespace MackLib
 		}
 
 		/// <summary>
+		/// Extracts the file in memory and returns a stream to read it.
+		/// </summary>
+		/// <returns></returns>
+		public Stream GetDataAsStream()
+		{
+			var data = this.GetData();
+			return new MemoryStream(data);
+		}
+
+		/// <summary>
 		/// Extracts the uncompressed file to the temp folder and returns
 		/// a file stream for it.
 		/// </summary>

@@ -137,6 +137,30 @@ namespace MackLib
 		}
 
 		/// <summary>
+		/// Returns first entry with the given file name via out, returns
+		/// false if no entries were found.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="entry"></param>
+		/// <returns></returns>
+		public bool TryGetEntryByFileName(string fileName, out PackedFileEntry entry)
+		{
+			fileName = fileName.ToLower();
+
+			List<PackedFileEntry> entries;
+			entry = null;
+
+			lock (_syncLock)
+				_entriesNamed.TryGetValue(fileName, out entries);
+
+			if (entries == null)
+				return false;
+
+			entry = entries.FirstOrDefault();
+			return true;
+		}
+
+		/// <summary>
 		/// Returns list of all entries.
 		/// </summary>
 		/// <returns></returns>
