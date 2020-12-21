@@ -362,7 +362,7 @@ namespace MackLib
 			// Use UCL for old KR packs
 			// v1: KR72 (Beta Client)
 			// v257 from 2006: KR281
-			if (this.Header.FormatVersion == 1 || (this.Header.FormatVersion == 257 && this.Header.FileTime1.Year == 2006))
+			if (this.Header.FormatVersion == 1 || (this.Header.FormatVersion == 257 && this.Header.FileTime1.Year >= 2005 && this.Header.FileTime1.Year <= 2006))
 			{
 				var uncompressed = Ucl.Decompress_NRV2E(buffer, this.FileSize);
 
