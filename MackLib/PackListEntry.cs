@@ -126,7 +126,7 @@ namespace MackLib
 	/// </summary>
 	public class PackedFileEntry : IPackListEntry
 	{
-		private BinaryReader _br;
+		private readonly BinaryReader _br;
 		private string _tempPath;
 
 #pragma warning disable CS1591 // missing XML comments

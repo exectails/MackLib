@@ -14,8 +14,8 @@ namespace MackLib
 	{
 		private readonly object _syncLock = new object();
 
-		private Dictionary<string, IPackListEntry> _entries = new Dictionary<string, IPackListEntry>();
-		private Dictionary<string, List<IPackListEntry>> _entriesNamed = new Dictionary<string, List<IPackListEntry>>();
+		private readonly Dictionary<string, IPackListEntry> _entries = new Dictionary<string, IPackListEntry>();
+		private readonly Dictionary<string, List<IPackListEntry>> _entriesNamed = new Dictionary<string, List<IPackListEntry>>();
 		private Stream _fs;
 		private BinaryReader _br;
 

@@ -14,10 +14,10 @@ namespace MackLib
 	{
 		private readonly object _syncLock = new object();
 
-		private Dictionary<string, PackedFileEntry> _entries = new Dictionary<string, PackedFileEntry>();
-		private Dictionary<string, List<PackedFileEntry>> _entriesNamed = new Dictionary<string, List<PackedFileEntry>>();
-		private List<FileStream> _fileStreams = new List<FileStream>();
-		private List<BinaryReader> _binaryReaders = new List<BinaryReader>();
+		private readonly Dictionary<string, PackedFileEntry> _entries = new Dictionary<string, PackedFileEntry>();
+		private readonly Dictionary<string, List<PackedFileEntry>> _entriesNamed = new Dictionary<string, List<PackedFileEntry>>();
+		private readonly List<FileStream> _fileStreams = new List<FileStream>();
+		private readonly List<BinaryReader> _binaryReaders = new List<BinaryReader>();
 
 		/// <summary>
 		/// File path that was used to create this reader.
@@ -27,12 +27,12 @@ namespace MackLib
 		/// <summary>
 		/// Amount of entries in all open pack files.
 		/// </summary>
-		public int Count { get { return _entries.Count; } }
+		public int Count => _entries.Count;
 
 		/// <summary>
 		/// Amount of open pack files.
 		/// </summary>
-		public int PackCount { get { return _fileStreams.Count; } }
+		public int PackCount => _fileStreams.Count;
 
 		/// <summary>
 		/// Creates new pack reader for given file or folder.
