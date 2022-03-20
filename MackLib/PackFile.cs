@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Ionic.Zlib;
 using MackLib.Compression;
+using MackLib.Encryption;
 using MackLib.Random;
 
 namespace MackLib
@@ -326,9 +327,7 @@ namespace MackLib
 							compressed = msCompressed.ToArray();
 						}
 
-						var mt = new MTRandom((entry.Seed << 7) ^ 0xA9C36DE1);
-						for (var i = 0; i < compressed.Length; ++i)
-							compressed[i] = (byte)(compressed[i] ^ mt.GetUInt32());
+						MTCrypt.Encrypt(ref compressed, entry.Seed);
 
 						data = compressed;
 					}

@@ -58,6 +58,7 @@
     <Compile Include="Compression\DotNetZip\Zlib\ZlibCodec.cs" />
     <Compile Include="Compression\DotNetZip\Zlib\ZlibConstants.cs" />
     <Compile Include="Compression\DotNetZip\Zlib\ZlibStream.cs" />
+    <Compile Include="Encryption\MTCrypt.cs" />
     <Compile Include="ItFileFlag.cs" />
     <Compile Include="ItHeader.cs" />
     <Compile Include="ItListEntry.cs" />

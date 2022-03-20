@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using Ionic.Zlib;
 using MackLib.Compression.NRV;
+using MackLib.Encryption;
 using MackLib.Random;
 
 namespace MackLib
@@ -347,10 +348,7 @@ namespace MackLib
 			if (this.Header.FormatVersion == 1)
 				return;
 
-			var mt = new MTRandom((this.Seed << 7) ^ 0xA9C36DE1);
-
-			for (var i = 0; i < buffer.Length; ++i)
-				buffer[i] = (byte)(buffer[i] ^ mt.GetUInt32());
+			MTCrypt.Decrypt(ref buffer, this.Seed);
 		}
 
 		/// <summary>
