@@ -1,6 +1,6 @@
-﻿using MackLib;
-using System;
+﻿using System;
 using System.IO;
+using MackLib;
 using Xunit;
 
 namespace Tests.MackLib
@@ -10,7 +10,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void OpenReader()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				Assert.InRange(pf.Count, 1, 100000);
@@ -31,7 +31,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void GetData()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				var entry = pf.GetEntry(@"data\local\xml\arbeit.english.txt");
@@ -40,9 +40,9 @@ namespace Tests.MackLib
 				using (var ms = new MemoryStream(entry.GetData()))
 				using (var sr = new StreamReader(ms))
 				{
-					Assert.Equal(sr.ReadLine(), "1\tGeneral");
-					Assert.Equal(sr.ReadLine(), "2\tGrocery Store");
-					Assert.Equal(sr.ReadLine(), "3\tChurch");
+					Assert.Equal("1\tGeneral", sr.ReadLine());
+					Assert.Equal("2\tGrocery Store", sr.ReadLine());
+					Assert.Equal("3\tChurch", sr.ReadLine());
 				}
 			}
 		}
@@ -50,7 +50,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void ReadingFileData()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				var entry = pf.GetEntry(@"data\local\xml\arbeit.english.txt");
@@ -59,9 +59,9 @@ namespace Tests.MackLib
 				using (var ms = new MemoryStream(entry.GetData()))
 				using (var sr = new StreamReader(ms))
 				{
-					Assert.Equal(sr.ReadLine(), "1\tGeneral");
-					Assert.Equal(sr.ReadLine(), "2\tGrocery Store");
-					Assert.Equal(sr.ReadLine(), "3\tChurch");
+					Assert.Equal("1\tGeneral", sr.ReadLine());
+					Assert.Equal("2\tGrocery Store", sr.ReadLine());
+					Assert.Equal("3\tChurch", sr.ReadLine());
 				}
 			}
 		}
@@ -69,7 +69,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void ReadingFileStream()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				var entry = pf.GetEntry(@"data\local\xml\arbeit.english.txt");
@@ -77,9 +77,9 @@ namespace Tests.MackLib
 
 				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
 				{
-					Assert.Equal(sr.ReadLine(), "1\tGeneral");
-					Assert.Equal(sr.ReadLine(), "2\tGrocery Store");
-					Assert.Equal(sr.ReadLine(), "3\tChurch");
+					Assert.Equal("1\tGeneral", sr.ReadLine());
+					Assert.Equal("2\tGrocery Store", sr.ReadLine());
+					Assert.Equal("3\tChurch", sr.ReadLine());
 				}
 			}
 		}
@@ -87,7 +87,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void GetEntry()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				var entry = pf.GetEntry(@"data\local\xml\arbeit.english.txt");
@@ -98,7 +98,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void FullPath()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				// Previously the base path was ignored, which meant that
@@ -118,7 +118,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void Save()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			var contents = File.ReadAllBytes(path);
 			var tempPath = Path.GetTempFileName();
 
@@ -132,11 +132,13 @@ namespace Tests.MackLib
 				var entry = pf.GetEntry(@"data\local\xml\auctioncategory.english.txt");
 				Assert.NotEqual(null, entry);
 
+				File.WriteAllBytes("c:/users/exec/desktop/test.txt", entry.GetData());
+
 				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
 				{
-					Assert.Equal(sr.ReadLine(), "1\tMelee Weapon");
-					Assert.Equal(sr.ReadLine(), "2\tOne-Handed");
-					Assert.Equal(sr.ReadLine(), "3\tTwo-Handed");
+					Assert.Equal("1\tMelee Weapon", sr.ReadLine());
+					Assert.Equal("2\tOne-Handed", sr.ReadLine());
+					Assert.Equal("3\tTwo-Handed", sr.ReadLine());
 				}
 			}
 
@@ -165,9 +167,9 @@ namespace Tests.MackLib
 
 				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
 				{
-					Assert.Equal(sr.ReadLine(), "foo1");
-					Assert.Equal(sr.ReadLine(), "bar1");
-					Assert.Equal(sr.ReadLine(), null);
+					Assert.Equal("foo1", sr.ReadLine());
+					Assert.Equal("bar1", sr.ReadLine());
+					Assert.Equal(null, sr.ReadLine());
 				}
 			}
 
@@ -185,9 +187,9 @@ namespace Tests.MackLib
 
 				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
 				{
-					Assert.Equal(sr.ReadLine(), "foo2");
-					Assert.Equal(sr.ReadLine(), "bar2");
-					Assert.Equal(sr.ReadLine(), null);
+					Assert.Equal("foo2", sr.ReadLine());
+					Assert.Equal("bar2", sr.ReadLine());
+					Assert.Equal(null, sr.ReadLine());
 				}
 			}
 
@@ -205,9 +207,9 @@ namespace Tests.MackLib
 
 				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
 				{
-					Assert.Equal(sr.ReadLine(), "foo3");
-					Assert.Equal(sr.ReadLine(), "bar3");
-					Assert.Equal(sr.ReadLine(), null);
+					Assert.Equal("foo3", sr.ReadLine());
+					Assert.Equal("bar3", sr.ReadLine());
+					Assert.Equal(null, sr.ReadLine());
 				}
 			}
 
@@ -218,7 +220,7 @@ namespace Tests.MackLib
 		[Fact]
 		public void GetEntriesByFileName()
 		{
-			var path = Path.Combine(PackReader.GetMabinogiDirectory(), "package", "language.pack");
+			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
 			using (var pf = new PackFile(path))
 			{
 				var entries = pf.GetEntriesByFileName(@"auctioncategory.english.txt");

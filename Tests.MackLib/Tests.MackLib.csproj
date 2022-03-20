@@ -48,6 +48,7 @@
     <Compile Include="PackFile.cs" />
     <Compile Include="PackReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MackLib\MackLib.csproj">
