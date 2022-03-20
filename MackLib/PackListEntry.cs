@@ -1,8 +1,8 @@
-﻿using ComponentAce.Compression.Libs.zlib;
-using MackLib.UclCompression;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
+using Ionic.Zlib;
+using MackLib.UclCompression;
 
 namespace MackLib
 {
@@ -371,8 +371,9 @@ namespace MackLib
 			}
 			else
 			{
-				using (var zlib = new ZOutputStream(outStream))
-					zlib.Write(buffer, 0, buffer.Length);
+				using (var msCompressed = new MemoryStream(buffer))
+				using (var zlib = new ZlibStream(msCompressed, CompressionMode.Decompress))
+					zlib.CopyTo(outStream);
 			}
 		}
 	}

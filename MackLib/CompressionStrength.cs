@@ -1,6 +1,4 @@
-﻿using ComponentAce.Compression.Libs.zlib;
-
-namespace MackLib
+﻿namespace MackLib
 {
 	/// <summary>
 	/// Defines how strong the applied compression is.
@@ -10,22 +8,22 @@ namespace MackLib
 		/// <summary>
 		/// Data is not compressed.
 		/// </summary>
-		NoCompression = zlibConst.Z_NO_COMPRESSION,
+		NoCompression,
 
 		/// <summary>
 		/// Data is compressed only slightly, for fast (de)compression.
 		/// </summary>
-		Fast = zlibConst.Z_BEST_SPEED,
+		Fast,
 
 		/// <summary>
 		/// Data is compressed strongly to save space. Takes longer to
 		/// (de)compress.
 		/// </summary>
-		Strong = zlibConst.Z_BEST_COMPRESSION,
+		Strong,
 
 		/// <summary>
 		/// Default compression level, a mix of speed and space savings.
 		/// </summary>
-		Default = zlibConst.Z_DEFAULT_COMPRESSION,
+		Default,
 	}
 }

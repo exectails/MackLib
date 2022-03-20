@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using ComponentAce.Compression.Libs.zlib;
+using Ionic.Zlib;
 
 namespace MackLib
 {
@@ -307,13 +307,21 @@ namespace MackLib
 						var dataStart = bw.BaseStream.Position;
 						byte[] compressed;
 
-						using (var ms = new MemoryStream())
+						var compressionLevel = CompressionLevel.Default;
+						switch (compression)
 						{
-							var zlib = new ZOutputStream(ms, (int)compression);
-							zlib.Write(data, 0, data.Length);
-							zlib.finish();
+							default:
+							case CompressionStrength.Default: compressionLevel = CompressionLevel.Default; break;
+							case CompressionStrength.Fast: compressionLevel = CompressionLevel.BestSpeed; break;
+							case CompressionStrength.Strong: compressionLevel = CompressionLevel.BestCompression; break;
+						}
 
-							compressed = ms.ToArray();
+						using (var msData = new MemoryStream(data))
+						using (var msCompressed = new MemoryStream())
+						using (var zlib = new ZlibStream(msData, CompressionMode.Compress, compressionLevel))
+						{
+							zlib.CopyTo(msCompressed);
+							compressed = msCompressed.ToArray();
 						}
 
 						var mt = new MTRandom((entry.Seed << 7) ^ 0xA9C36DE1);
