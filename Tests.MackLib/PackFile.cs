@@ -120,7 +120,6 @@ namespace Tests.MackLib
 		public void Save()
 		{
 			var path = Path.Combine(Util.GetMabiDir(), "package", "language.pack");
-			var contents = File.ReadAllBytes(path);
 			var tempPath = Path.GetTempFileName();
 
 			using (var pf = new PackFile(path))
@@ -132,8 +131,6 @@ namespace Tests.MackLib
 			{
 				var entry = pf.GetEntry(@"data\local\xml\auctioncategory.english.txt");
 				Assert.NotEqual(null, entry);
-
-				File.WriteAllBytes("c:/users/exec/desktop/test.txt", entry.GetData());
 
 				using (var sr = new StreamReader(entry.GetDataAsFileStream()))
 				{
