@@ -103,6 +103,9 @@ namespace MackLib
 		/// <param name="relativePath"></param>
 		public void AddFile(string filePath, string relativePath)
 		{
+			var entry = new FileEntry(filePath, relativePath);
+			entry.Seed = (uint)this.Header.PackVersion;
+
 			this.AddEntry(new FileEntry(filePath, relativePath));
 		}
 
@@ -268,7 +271,7 @@ namespace MackLib
 					else
 						throw new Exception("Unknown entry name type '" + entry.NameType + "'.");
 
-					bw.Write(this.Header.PackVersion); // bw.Write(entry.Seed);
+					bw.Write(entry.Seed);
 					bw.Write(entry.Zero);
 
 					entryStarts[entry] = bw.BaseStream.Position;
