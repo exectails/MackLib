@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressionStrength.cs" />
+    <Compile Include="Compression\CompressionStrength.cs" />
     <Compile Include="Compression\DotNetZip\CommonSrc\CRC32.cs" />
     <Compile Include="Compression\DotNetZip\Zlib\Deflate.cs" />
     <Compile Include="Compression\DotNetZip\Zlib\DeflateStream.cs" />
@@ -64,7 +64,7 @@
     <Compile Include="ItStream.cs" />
     <Compile Include="Encryption\Snow\Snow2.Tables.cs" />
     <Compile Include="ItFile.cs" />
-    <Compile Include="MTRandom.cs" />
+    <Compile Include="Random\MTRandom.cs" />
     <Compile Include="PackListNameType.cs" />
     <Compile Include="PackListEntry.cs" />
     <Compile Include="PackHeader.cs" />
@@ -72,8 +72,8 @@
     <Compile Include="PackReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Encryption\Snow\Snow2.cs" />
-    <Compile Include="ucl\Ucl.cs" />
-    <Compile Include="ucl\UclResult.cs" />
+    <Compile Include="Compression\NRV\Ucl.cs" />
+    <Compile Include="Compression\NRV\UclResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Compression\DotNetZip\Zlib\LICENSE.jzlib.txt" />

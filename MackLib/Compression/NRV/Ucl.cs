@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace MackLib.UclCompression
+namespace MackLib.Compression.NRV
 {
 	/// <summary>
 	/// Compression for KR beta client.
 	/// </summary>
-	internal static class Ucl
+	public static class Ucl
 	{
 		/// <summary>
 		/// Decompresses array to given size and returns it.
@@ -52,8 +52,8 @@ namespace MackLib.UclCompression
 				{
 					if (ilen >= src_len)
 					{
-						dst_len = olen; return
-							UclResult.InputOverrun;
+						dst_len = olen;
+						return UclResult.InputOverrun;
 					}
 
 					if (olen >= oend)

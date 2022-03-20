@@ -1,4 +1,4 @@
-﻿namespace MackLib
+﻿namespace MackLib.Random
 {
 	/// <summary>
 	/// MersenneTwister Random Number Generator.

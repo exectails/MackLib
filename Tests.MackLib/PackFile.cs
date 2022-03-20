@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using MackLib;
+using MackLib.Compression;
 using Xunit;
 
 namespace Tests.MackLib

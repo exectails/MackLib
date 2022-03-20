@@ -2,7 +2,8 @@
 using System.IO;
 using System.Text;
 using Ionic.Zlib;
-using MackLib.UclCompression;
+using MackLib.Compression.NRV;
+using MackLib.Random;
 
 namespace MackLib
 {

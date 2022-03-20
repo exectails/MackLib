@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Ionic.Zlib;
+using MackLib.Compression;
+using MackLib.Random;
 
 namespace MackLib
 {

@@ -1,4 +1,4 @@
-﻿namespace MackLib
+﻿namespace MackLib.Compression
 {
 	/// <summary>
 	/// Defines how strong the applied compression is.
