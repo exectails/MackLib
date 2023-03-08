@@ -190,7 +190,7 @@ namespace MackLib
 			}
 			else
 			{
-				using (var br = new BinaryReader(_fs))
+				using (var br = new BinaryReader(_fs, Encoding.UTF8, true))
 					br.Read(content, 0, content.Length);
 			}
 
