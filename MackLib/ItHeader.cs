@@ -56,7 +56,7 @@ namespace MackLib
 
 			var valid = result.FileCount + result.Version == result.Checksum;
 			if (!valid)
-				throw new InvalidDataException("Invalid data, checksum test failed.");
+				throw new InvalidDataException("Invalid header data, checksum test failed.");
 
 			return result;
 		}

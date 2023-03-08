@@ -56,7 +56,7 @@ namespace MackLib
 			var valid = (int)result.Flags + result.Offset + result.Size + result.CompressedSize + keysSum == result.Checksum;
 
 			if (!valid)
-				throw new InvalidDataException("Invalid data, checksum test failed.");
+				throw new InvalidDataException("Invalid entry data, checksum test failed.");
 
 			return result;
 		}
